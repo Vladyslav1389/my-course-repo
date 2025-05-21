@@ -28,7 +28,7 @@
                         {% csrf_token %}
                         <div class="input-group">
                             <input type="text" class="form-control" placeholder="Username" name="username" >
-                            <input type="password" class="form-control" placeholder="Username" name="psw" >
+                            <input type="password" class="form-control" placeholder="Password" name="psw" >
                             <button class="btn btn-primary" type="submit">Login</button>
                             <a class="btn btn-link" href="{% url 'onlinecourse:registration' %}">Sign Up</a>
                         </div>
@@ -50,7 +50,35 @@
                     </div>
                 {% endfor %}
             </div>
+
+
             <!-- Course detail template changes go here -->
+            <!-- <div class="collapse" id="collapseExample"> -->
+                <button style="background-color: rgb(134, 170, 249);">Start Exam</button>
+                {% if user.is_authenticated %}
+                    <div>
+                        <form name="checkedanswers" action="" method="post">    
+                            {% for question in course.question_set.all %}
+                                <br>
+                                <fieldset style="border-width: 1px; border: solid beige; padding-left: 5px;">
+                                    <legend style="background-color: rgb(241, 241, 241);">{{ question.content }}</legend>
+<div  style="background-color: white; border-color: beige;">
+                                    {% for choice in question.choice_set.all %}
+                                    <input id="choice" type="checkbox" name="question{{question.id}}" > 
+                                    <label for="choice"> {{ choice.content }} </label>
+                                    <br>
+                                    {% endfor %}
+                                </fieldset>
+                                <br>
+                                {% endfor %}
+</div>
+                                <input type="submit" value="Submit" style="background-color: rgb(38, 248, 38);">
+                        </form>
+                    </div>
+                {% else %}
+                    <p> You are not authenticated. </p>
+                {% endif %}
+            </div> 
     </div>
 </body>
 </html>
