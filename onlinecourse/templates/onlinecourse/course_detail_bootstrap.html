@@ -41,44 +41,85 @@
 
     <!-- Page content -->
     <div class="container-fluid">
-            <h2>{{ course.name }}</h2>
-            <div class="card-columns-vertical">
-                {% for lesson in course.lesson_set.all %}
-                    <div class="card mt-1">
-                        <div class="card-header"><h5>Lesson {{lesson.order|add:1}}: {{lesson.title}}</h5></div>
-                        <div class="card-body">{{lesson.content}}</div>
+        <h2>{{ course.name }}</h2>
+        <div class="card-columns-vertical">
+            {% for lesson in course.lesson_set.all %}
+                <div class="card mt-1">
+                    <div class="card-header"><h5>Lesson {{lesson.order|add:1}}: {{lesson.title}}</h5></div>
+                    <div class="card-body">{{lesson.content}}</div>
+                </div>
+            {% endfor %}
+        </div>
+
+
+        {% if user.is_authenticated %}
+
+        <button class="btn btn-primary btn-block" data-toggle="collapse" data-target="#exam">
+             Start Exam </button>
+
+        <div class="collapse" id="exam">
+            <form id="questionform" action="{% url 'onlinecourse:submit' %}" method="post">
+                {% csrf_token %}
+                
+                {% for question in course.question_set.all %}
+                <div class="card mt-1">
+                    <div class="card-header">
+                        <h3>{{ question.content }}</h3>
                     </div>
+
+                    <div class="form-group">
+                        {% for choice in question.choice_set.all %}
+                        <div class="form-check">
+                            <input type="checkbox" id="{{choice.id}}" name="choice_{{choice.id}}"
+                                value="{{choice.id}}" class="form-check-input" >
+                            <label for="{{choice.id}}" class="form-check-label"> 
+                                <h5>
+                                    {{ choice.content }} 
+                                </h5>
+                            </label>
+                        </div>
+                        {% endfor %}
+                    </div>
+
                 {% endfor %}
-            </div>
+                <input class="btn btn-success btn-block" type="submit" value="Submit">
+                </div>
+            </form>
+        </div>
+        {% endif %}
 
 
-            <!-- Course detail template changes go here -->
-            <!-- <div class="collapse" id="collapseExample"> -->
-                <button style="background-color: rgb(134, 170, 249);">Start Exam</button>
-                {% if user.is_authenticated %}
-                    <div>
-                        <form name="checkedanswers" action="" method="post">    
-                            {% for question in course.question_set.all %}
-                                <br>
-                                <fieldset style="border-width: 1px; border: solid beige; padding-left: 5px;">
-                                    <legend style="background-color: rgb(241, 241, 241);">{{ question.content }}</legend>
-<div  style="background-color: white; border-color: beige;">
-                                    {% for choice in question.choice_set.all %}
-                                    <input id="choice" type="checkbox" name="question{{question.id}}" > 
-                                    <label for="choice"> {{ choice.content }} </label>
-                                    <br>
-                                    {% endfor %}
-                                </fieldset>
+        <!-- Course detail template changes go here -->
+         <!--
+        {% if user.is_authenticated %}
+        
+        <button class="btn btn-primary btn-block" data-toggle="collapse" data-target="#exam">Start Exam</button>
+
+        <div class="collapse" id="exam">
+            <!-- <!-- <button style="background-color: rgb(134, 170, 249);">Start Exam</button> -->
+                <!-- <!-- <div> -->
+                     <!--<form name="checkedanswers" action="" method="post">    
+                        {% for question in course.question_set.all %}
+                            <br>
+                            <fieldset style="border-width: 0.5px; border: solid grey;">
+                                <legend style="background-color: rgb(241, 241, 241); padding-left: 15px; margin-left: 10px;">{{ question.content }}</legend>
+<div  style="background-color: white; padding-left: 25px;">
+                                {% for choice in question.choice_set.all %}
+                                <input id="choice" type="checkbox" name="question{{question.id}}" > 
+                                <label for="choice"> {{ choice.content }} </label>
                                 <br>
                                 {% endfor %}
+                            </fieldset>
+                            <br>
+                            {% endfor %}
 </div>
-                                <input type="submit" value="Submit" style="background-color: rgb(38, 248, 38);">
-                        </form>
-                    </div>
-                {% else %}
-                    <p> You are not authenticated. </p>
-                {% endif %}
-            </div> 
+                            <input type="submit" value="Submit" style="background-color: rgb(38, 248, 38); border-radius: 4px;">
+                    </form>
+                <!-- </div> -->
+            <!--{% else %}
+                <p> You are not authenticated. </p>
+            {% endif %}
+        </div> -->
     </div>
 </body>
 </html>
