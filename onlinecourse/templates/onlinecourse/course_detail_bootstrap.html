@@ -50,37 +50,25 @@
                 </div>
             {% endfor %}
         </div>
-
-
         {% if user.is_authenticated %}
-
-        <button class="btn btn-primary btn-block" data-toggle="collapse" data-target="#exam">
-             Start Exam </button>
-
+        </br>
+        <button class="btn btn-primary btn-block" data-toggle="collapse" data-target="#exam"> Start Exam </button>
         <div class="collapse" id="exam">
             <form id="questionform" action="{% url 'onlinecourse:submit' %}" method="post">
-                {% csrf_token %}
-                
                 {% for question in course.question_set.all %}
                 <div class="card mt-1">
                     <div class="card-header">
-                        <h3>{{ question.content }}</h3>
+                        <h5>{{ question.content }}</h5>
                     </div>
-
+                    {% csrf_token %}
                     <div class="form-group">
                         {% for choice in question.choice_set.all %}
-                        <div class="form-check">
-                            <input type="checkbox" id="{{choice.id}}" name="choice_{{choice.id}}"
-                                value="{{choice.id}}" class="form-check-input" >
-                            <label for="{{choice.id}}" class="form-check-label"> 
-                                <h5>
-                                    {{ choice.content }} 
-                                </h5>
-                            </label>
-                        </div>
+                            <div class="form-check">
+                                <input type="checkbox" id="{{choice.id}}" name="choice_{{choice.id}}" value="{{choice.id}}" class="form-check-input" >
+                                <label for="{{choice.id}}" class="form-check-label"> {{ choice.content }} </label>
+                            </div>
                         {% endfor %}
                     </div>
-
                 {% endfor %}
                 <input class="btn btn-success btn-block" type="submit" value="Submit">
                 </div>
