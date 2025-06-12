@@ -110,16 +110,45 @@ def submit(request, course_id):
 
     enrollment = Enrollment.objects.get(user=user, course=course)
     
+    # Submission.objects.create(enrollment=enrollment)
+    submission = Submission.objects.create(enrollment=enrollment)
+
+    selected_ids = extract_answers(request)
 
 
-def submit(request):
-    choices = extract_answers(request)
-
+    for selected_id in selected_ids:
+        submission.choices.add(Choice.objects.get(pk=selected_id))
+    #     Submission.objects.create(enrollment=enrollment, choice=selected_id)
+    choices_set = []
+    for choi in submission.choices.all():
+        choices_set.append(choi.id)
     template = "<html>" \
-                f"This is your submit view {choices}" \
-               "</html>"
+            f"Submission id = {submission.id}\n Submission enrollment = {submission.enrollment}\n submission choices = {choices_set}" \
+            "</html>"
+
+
+
+    # choices_set = Submission.objects.all()
+    # choices_set = Submission.objects.filter(enrollment=enrollment)
+    # choices = []
+    # for choice in choices_set:
+    #     choices.append((choice.enrollment_id, choice.id, choice.choices))
+
+    # template = "<html>" \
+    #             f"This is your submit view {choices}" \
+    #            "</html>"
+
     # Return the template as content argument in HTTP response
     return HttpResponse(content=template)
+
+# def submit(request):
+#     choices = extract_answers(request)
+
+#     template = "<html>" \
+#                 f"This is your submit view {choices}" \
+#                "</html>"
+#     # Return the template as content argument in HTTP response
+#     return HttpResponse(content=template)
 
 
 
