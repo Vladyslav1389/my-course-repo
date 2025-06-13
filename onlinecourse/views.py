@@ -110,46 +110,23 @@ def submit(request, course_id):
 
     enrollment = Enrollment.objects.get(user=user, course=course)
     
-    # Submission.objects.create(enrollment=enrollment)
     submission = Submission.objects.create(enrollment=enrollment)
 
     selected_ids = extract_answers(request)
 
-
     for selected_id in selected_ids:
         submission.choices.add(Choice.objects.get(pk=selected_id))
-    #     Submission.objects.create(enrollment=enrollment, choice=selected_id)
-    choices_set = []
-    for choi in submission.choices.all():
-        choices_set.append(choi.id)
-    template = "<html>" \
-            f"Submission id = {submission.id}\n Submission enrollment = {submission.enrollment}\n submission choices = {choices_set}" \
-            "</html>"
 
+    return redirect('onlinecourse:exam_result', course.id, submission.id)
+    # return HttpResponseRedirect(reverse(viewname='onlinecourse:exam_result', args=(course_id, submission.id,)))
 
-
-    # choices_set = Submission.objects.all()
-    # choices_set = Submission.objects.filter(enrollment=enrollment)
-    # choices = []
-    # for choice in choices_set:
-    #     choices.append((choice.enrollment_id, choice.id, choice.choices))
-
+    # choices_set = []
+    # for choi in submission.choices.all():
+    #     choices_set.append(choi.id)
     # template = "<html>" \
-    #             f"This is your submit view {choices}" \
-    #            "</html>"
-
-    # Return the template as content argument in HTTP response
-    return HttpResponse(content=template)
-
-# def submit(request):
-#     choices = extract_answers(request)
-
-#     template = "<html>" \
-#                 f"This is your submit view {choices}" \
-#                "</html>"
-#     # Return the template as content argument in HTTP response
-#     return HttpResponse(content=template)
-
+    #         f"Submission id = {submission.id}||</br> Submission enrollment = {submission.enrollment}</br> submission choices = {choices_set}" \
+    #         "</html>"
+    # return HttpResponse(content=template)
 
 
 # An example method to collect the selected choices from the exam form from the request object
@@ -169,7 +146,11 @@ def extract_answers(request):
         # Get the selected choice ids from the submission record
         # For each selected choice, check if it is a correct answer or not
         # Calculate the total score
-#def show_exam_result(request, course_id, submission_id):
+def show_exam_result(request, course_id, submission_id):
+    template = "<html>" \
+            f"Success. </br> The show_exam_result view" \
+            "</html>"
+    return HttpResponse(content=template)
 
 
 
