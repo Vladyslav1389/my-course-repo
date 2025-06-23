@@ -152,32 +152,48 @@ def show_exam_result(request, course_id, submission_id):
     questions = course.question_set.all()
     choices = submission.choices.all()
 
-    qrade = 0
-    for question in questions:
-        correct_choices = question.choice_set.all()
-        selected_choices = choices.filter(question=question)
-        if set(correct_choices) == set(selected_choices):
-            grade += question.grade
-
-    # choice_ids = []
-    # for choice in submission.choices.all():
-    #     if choice.is_correct:
-    #         choice_ids.append(choice.id)
-
+    context = {}
     # grade = 0
     # for question in questions:
-    #     if question.is_get_score(choice_ids):
+    #     correct_choices = question.choice_set.all()
+    #     selected_choices = choices.filter(question=question)
+    #     if set(correct_choices) == set(selected_choices):
     #         grade += question.grade
 
+
+
+    choice_ids = []
+    for choice in submission.choices.all():
+        if choice.is_correct:
+            choice_ids.append(choice.id)
+
+    grade = 0
+    for question in questions:
+        if question.is_get_score(choice_ids):
+            grade += question.grade
+
+    # context = {'course':course, 'grade':grade}
+    # # context['course'] = course
+    # # context['grade'] = grade
+    # # context['choices'] = choices
+    
     # template = "<html>" \
     #         f"Success. </br> The show_exam_result view </br> " \
     #         f"course={course.id} </br>submission={submission.id}</br>" \
     #         f"choices_ids={choice_ids}</br> " \
-    #         f"grade={grade}" \
+    #         f"grade={grade}</br>" \
+    #         f"context.grade={context['grade']}</br>" \
+    #         f"context.course.id={context['course'].id}" \
     #         "</html>"
     # return HttpResponse(content=template)
 
-    context = {}
+
+    # context = {'course':course, 'grade':grade}
+    context['course'] = course
+    context['grade'] = grade
+    context['choices'] = choices
+
+
     return render(request, 'onlinecourse/exam_result_bootstrap.html', context)
 
 

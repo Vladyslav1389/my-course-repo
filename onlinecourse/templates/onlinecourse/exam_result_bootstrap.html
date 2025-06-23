@@ -36,9 +36,13 @@
 </nav>
 
 <div class="container-fluid">
+    <p> grade = {{grade}} </p>
     {% if grade > 80 %}
     <div class="alert alert-success">
        <!--HINT Display passed info -->
+       <h3>
+        <b>Congratulations, {{ user.username }}!</b> You have passed the exam and completed the course with score {{ grade }}/100
+       </h3>
     </div>
         {% else %}
         <div class="alert alert-danger">
