@@ -36,23 +36,46 @@
 </nav>
 
 <div class="container-fluid">
-    <p> grade = {{grade}} </p>
     {% if grade > 80 %}
     <div class="alert alert-success">
        <!--HINT Display passed info -->
-       <h3>
-        <b>Congratulations, {{ user.username }}!</b> You have passed the exam and completed the course with score {{ grade }}/100
-       </h3>
+       <h4>
+        <b>Congratulations, {{ user.username }}!</b> You have passed the exam and completed the course with score {{ grade }} / 100
+       </h4>
     </div>
         {% else %}
         <div class="alert alert-danger">
             <!--HINT Display failed info -->
+            <h4>
+                <b>Failed</b> Sorry, {{ user.username }} ! You have failed exam with score {{ grade }} / 100
+            </h4>
         </div>
         <a class="btn btn-link text-danger" href="{% url 'onlinecourse:course_details' course.id %}">Re-test</a>
         {% endif %}
         <div class="card-columns-vertical mt-1">
-        <h5 class="">Exam results</h5>
-            <!--HINT Display exam results-->
+        <h4 class="">Exam results</h4>
+        <!--HINT Display exam results-->
+        {% for question in course.question_set.all %}
+            <div class="card mt-1">
+                <div class="card-header"><h4>{{ question.content }}</h4></div>
+                <div class="form-group">
+                    {% for choice in question.choice_set.all %}
+                    <div class="form-check">
+                        {% if choice in choices and choice.is_correct %}
+                            <div class="text-success"><h5>Correct answer: {{ choice.content }}</h5></div>
+                        {% elif choice not in choices and choice.is_correct %}
+                            <div class="text-warning"><h5>Not selected: {{ choice.content }}</h5></div>
+                        {% elif choice in choices and not choice.is_correct %}
+                            <div class="text-danger"><h5>Wrong answer: {{ choice.content }}</h5></div>
+                        {% else %}
+                            <div><h5>{{ choice.content }}</h5></div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+        {% endfor %}
+            </div>
+
         </div>
     </div>
 </body>
